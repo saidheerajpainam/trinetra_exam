@@ -12,8 +12,15 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Approve any local development origin (localhost or 127.0.0.1 on any port) dynamically
-    if (!origin || origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:") || origin === "http://localhost" || origin === "http://127.0.0.1") {
+    // Approve any local development origin (localhost or 127.0.0.1 on any port) or FRONTEND_URL dynamically
+    const allowed = !origin || 
+      origin.startsWith("http://localhost:") || 
+      origin.startsWith("http://127.0.0.1:") || 
+      origin === "http://localhost" || 
+      origin === "http://127.0.0.1" ||
+      (process.env.FRONTEND_URL && (origin === process.env.FRONTEND_URL || origin.startsWith(process.env.FRONTEND_URL)));
+
+    if (allowed) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
