@@ -276,6 +276,7 @@ export default function ExamPage() {
         {/* Right Side: Active Question */}
         <div className="flex-1 w-full space-y-6">
           <QuestionCard
+            key={questions[currentQ].id}
             question={questions[currentQ]}
             index={currentQ}
             total={questions.length}
