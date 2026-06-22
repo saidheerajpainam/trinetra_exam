@@ -1,0 +1,73 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  mobile       String        @unique
+  college      String
+  course       String
+  password     String
+  role         String        @default("STUDENT") // STUDENT or ADMIN
+  createdAt    DateTime      @default(now())
+  results      Result[]
+  certificates Certificate[]
+}
+
+model Exam {
+  id             Int        @id @default(autoincrement())
+  subject        String     @unique
+  duration       Int        // in minutes
+  totalQuestions Int        @default(10)
+  questions      Question[]
+}
+
+model Question {
+  id            Int    @id @default(autoincrement())
+  examId        Int
+  exam          Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+  subject       String
+  question      String
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctAnswer String // A, B, C, or D
+  difficulty    String @default("Medium") // Easy, Medium, Hard
+  questionType  String @default("MCQ")
+}
+
+model Result {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject        String
+  score          Int
+  percentage     Float
+  date           DateTime @default(now())
+  passed         Boolean  @default(false)
+  isMalpractice  Boolean  @default(false)
+}
+
+model Announcement {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  date        DateTime @default(now())
+}
+
+model Certificate {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  certificateNo String   @unique
+  subject       String
+  date          DateTime @default(now())
+}

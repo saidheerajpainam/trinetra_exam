@@ -1,0 +1,57 @@
+TRINETRA EXAM PORTAL - MYSQL BACKEND SETUP
+
+1) Install MySQL Community Server
+   - Download MySQL Installer for Windows.
+   - During setup, remember your root password.
+   - Open MySQL Workbench or MySQL Command Line Client.
+
+2) Create database and tables
+   Open MySQL Workbench, open this file, and run it:
+   backend/database/schema.sql
+
+   OR from PowerShell:
+   mysql -u root -p < backend/database/schema.sql
+
+3) Start backend
+   Open PowerShell in project folder:
+   cd backend
+   copy .env.example .env
+
+   Open backend/.env and update:
+   DB_PASSWORD=your_mysql_password
+
+   Then run:
+   npm install
+   npm run dev
+
+   Backend URL:
+   http://localhost:5000
+
+4) Start frontend
+   Open another PowerShell in project root:
+   copy .env.example .env
+   npm install
+   npm run dev
+
+   Frontend URL:
+   http://localhost:5173
+
+5) Test
+   - Register a new user.
+   - Login.
+   - Select exam.
+   - Backend will assign 10 random questions from MySQL.
+   - Submit exam.
+   - Result is saved in MySQL.
+
+IMPORTANT TABLES CREATED IN CAPITAL LETTERS:
+USERS
+EXAMS
+QUESTIONS
+USER_EXAM_QUESTIONS
+USER_ANSWERS
+RESULTS
+
+NO DUPLICATES:
+USERS table blocks duplicate EMAIL, MOBILE, USER_ID, and HALL_TICKET.
+RESULTS table blocks duplicate result for the same user and exam.
