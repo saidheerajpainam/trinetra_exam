@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
 export interface User {
@@ -49,6 +49,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem("exam_time");
     setToken(null);
     setUser(null);
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "auth_token" || e.key === "auth_user") {
+        // Automatically sync states across tabs
+        const storedUser = localStorage.getItem("auth_user");
+        const storedToken = localStorage.getItem("auth_token");
+        try {
+          setUser(storedUser ? JSON.parse(storedUser) : null);
+        } catch {
+          setUser(null);
+        }
+        setToken(storedToken);
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const updateUser = useCallback((updatedUser: User) => {
