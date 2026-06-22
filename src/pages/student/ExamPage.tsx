@@ -242,22 +242,31 @@ export default function ExamPage() {
               const isCurrent = idx === currentQ;
               const isAnswered = !!answers[String(q.id)];
 
+              let buttonClass = "";
+              if (isAnswered) {
+                // Answered state is ALWAYS solid green
+                buttonClass = "bg-green-600 text-white border-green-600 shadow-sm shadow-green-600/10";
+              } else {
+                // Unanswered state is gray
+                buttonClass = "bg-slate-50 text-slate-400 border-slate-200 hover:bg-slate-100";
+              }
+
+              if (isCurrent) {
+                // Active question gets a distinct highlight ring (Blue indicator)
+                if (isAnswered) {
+                  buttonClass += " ring-2 ring-blue-500 ring-offset-2 border-blue-500 z-10 scale-105";
+                } else {
+                  buttonClass = "bg-blue-50 text-blue-600 border-blue-500 font-bold ring-2 ring-blue-500 ring-offset-2 z-10 scale-105";
+                }
+              }
+
               return (
                 <button
                   key={q.id}
                   onClick={() => setCurrentQ(idx)}
-                  className={`h-10 w-10 rounded-xl text-xs font-bold border transition-all flex items-center justify-center relative ${
-                    isCurrent
-                      ? "bg-green-600 text-white border-green-600 shadow-md shadow-green-600/20 ring-2 ring-green-600/30"
-                      : isAnswered
-                      ? "bg-green-50 text-green-700 border-green-200 font-black"
-                      : "bg-slate-50 text-slate-400 border-slate-100 hover:bg-slate-100"
-                  }`}
+                  className={`h-10 w-10 rounded-xl text-xs font-bold border transition-all flex items-center justify-center ${buttonClass}`}
                 >
                   {idx + 1}
-                  {isAnswered && !isCurrent && (
-                    <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-green-600 rounded-full"></span>
-                  )}
                 </button>
               );
             })}
