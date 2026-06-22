@@ -246,7 +246,7 @@ export default function ExamPage() {
                 <button
                   key={q.id}
                   onClick={() => setCurrentQ(idx)}
-                  className={`h-10 w-10 rounded-xl text-xs font-bold border transition-all flex items-center justify-center ${
+                  className={`h-10 w-10 rounded-xl text-xs font-bold border transition-all flex items-center justify-center relative ${
                     isCurrent
                       ? "bg-green-600 text-white border-green-600 shadow-md shadow-green-600/20 ring-2 ring-green-600/30"
                       : isAnswered
@@ -255,6 +255,9 @@ export default function ExamPage() {
                   }`}
                 >
                   {idx + 1}
+                  {isAnswered && !isCurrent && (
+                    <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-green-600 rounded-full"></span>
+                  )}
                 </button>
               );
             })}
