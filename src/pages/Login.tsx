@@ -129,6 +129,11 @@ export default function Login() {
               Register here
             </Link>
           </p>
+          <p className="text-xs">
+            <Link to="/admin-login" className="text-slate-400 hover:text-green-600 transition-colors">
+              Access Admin Portal
+            </Link>
+          </p>
         </div>
       </div>
     </div>
