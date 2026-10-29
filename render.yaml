@@ -1,0 +1,45 @@
+version: "1"
+
+databases:
+  - name: trinetra-db
+    databaseName: trinetra
+    user: trinetra_user
+    plan: free
+    region: oregon
+
+services:
+  # 1. Backend API (Node.js Express + Prisma)
+  - type: web
+    name: trinetra-backend
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: trinetra-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+
+  # 2. Frontend Application (Vite + React)
+  - type: web
+    name: trinetra-exam-portal
+    runtime: static
+    plan: free
+    region: oregon
+    rootDir: .
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://trinetra-backend.onrender.com/api
