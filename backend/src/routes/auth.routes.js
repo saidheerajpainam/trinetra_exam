@@ -70,6 +70,9 @@ router.post("/register", async (req, res) => {
     res.status(201).json({ token, user: cleanUser(newUser) });
   } catch (error) {
     console.error("Registration error:", error);
+    if (error.name === "PrismaClientInitializationError" || error.code === "P1001" || error.message?.includes("Can't reach database")) {
+      return res.status(503).json({ message: "Database connection failed. Please ensure the Render database is active." });
+    }
     res.status(500).json({ message: "Registration failed. Please try again." });
   }
 });
@@ -99,6 +102,9 @@ router.post("/login", async (req, res) => {
     res.json({ token, user: cleanUser(user) });
   } catch (error) {
     console.error("Login error:", error);
+    if (error.name === "PrismaClientInitializationError" || error.code === "P1001" || error.message?.includes("Can't reach database")) {
+      return res.status(503).json({ message: "Database is unreachable. Please verify your Render database is online." });
+    }
     res.status(500).json({ message: "Login failed" });
   }
 });
@@ -128,6 +134,9 @@ router.post("/admin/login", async (req, res) => {
     res.json({ token, user: cleanUser(user) });
   } catch (error) {
     console.error("Admin login error:", error);
+    if (error.name === "PrismaClientInitializationError" || error.code === "P1001" || error.message?.includes("Can't reach database")) {
+      return res.status(503).json({ message: "Database is unreachable. Please verify your Render database is online." });
+    }
     res.status(500).json({ message: "Admin login failed" });
   }
 });
